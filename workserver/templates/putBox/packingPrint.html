@@ -1,0 +1,140 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style>
+		@page {
+	    size: A4 landscape;
+		}
+		.onepage {
+			size: A4 landscape;
+			/* background-size: 100% auto;
+			background-repeat: no-repeat;
+		  background-image: url(https://www.yqputbox.cn/static/images/base/packingPrintBack.jpg);*/
+	  }
+
+		.normal {
+			vertical-align: top;
+			font-style: normal;
+			font-weight: normal;
+			font-size: 90%;
+			font-family: serif;
+		}
+
+		.big {
+			vertical-align: top;
+			font-style: normal;
+			font-weight: bolder;
+			font-size: 130%;
+			font-family: serif;
+		}
+
+		.small {
+			vertical-align: top;
+			font-style: normal;
+			font-weight: normal;
+			font-size: 70%;
+			font-family: serif;
+		}
+
+		</style>
+	</head>
+	<body>
+		{% for page in pagePara %}
+  	<div class="onepage" style="page-break-before: always">
+			<table border="0" cellspacing="0" cellpadding="0" style="undefined;table-layout: fixed; width: 100%">
+			<colgroup>
+			<col style="width: 67mm">
+			<col style="width: 37mm">
+			<col style="width: 26mm">
+			<col style="width: 26mm">
+			<col style="width: 37mm">
+			<col style="width: 80mm">
+			</colgroup>
+				<tr style="height: 39mm">
+					<td></td>
+					<td></td>
+					<td></td>
+					<td class="normal" style="padding-left: 3mm;padding-top: 8mm;" colspan="3">
+						{{page.dname}}&nbsp;&nbsp;&nbsp;{{page.plateNo}}&nbsp;&nbsp;&nbsp;{{page.dmobile}}&nbsp;&nbsp;&nbsp;{{page.deliveryInfo}}
+					</td>
+				</tr>
+			  <tr style="height: 18mm">
+			    <td class="normal" style="padding-left: 3mm;padding-top: 8mm;">{{page.shipv}}</td>
+			    <td class="normal" style="padding-left: 3mm;padding-top: 10mm;">{{page.loadingPort}}</td>
+			    <td class="normal" style="padding-left: 3mm;padding-top: 10mm;">{{page.dischargePort}}</td>
+			    <td class="normal" style="padding-left: 3mm;padding-top: 10mm;">{{page.deliverryPlace}}</td>
+			    <td colspan="2"></td>
+			  </tr>
+			  <tr style="height: 18mm">
+			    <td class="normal" style="padding-left: 3mm;padding-top: 8mm;">{{page.containerNo}}</td>
+			    <td  class="normal" style="padding-left: 3mm;padding-top: 20mm;" colspan="5" rowspan="4">
+						{% for g in page.goodsInfo %}
+	          <div>
+	            <div style="width: 40mm; float:left">
+	              {{g.billLodingNo}}
+	    				</div>
+	    				<div style="width: 26mm; float:left">
+	              {{g.packages}}
+	    				</div>
+	    				<div style="width: 26mm; float:left">
+	              {{g.weight}}
+	    				</div>
+	    				<div style="width: 26mm; float:left">
+	              {{g.measurements}}
+	    				</div>
+							<div style="width: 55mm; float:left">
+	              {{g.desc}}
+	    				</div>
+							<div style="width: 30mm; float:left">
+	              {{g.mark}}
+	    				</div>
+							<div style="clear:both;height:0;width:0"></div>
+	          </div>
+	          {% endfor %}
+					</td>
+			  </tr>
+			  <tr style="height: 37mm">
+			    <td class="normal" style="padding-left: 3mm;padding-top: 8mm;">{{page.sealNo}}</td>
+			  </tr>
+			  <tr style="height: 21mm">
+			    <td class="big" style="padding-left: 3mm;padding-top: 12mm;">{{page.containerInfo}}</td>
+			  </tr>
+			  <tr style="height: 33mm">
+			    <td class="small" style="padding-left: 3mm;padding-top: 10mm;">
+						{% for p in page.packageInfo %}
+						<div>
+							<div class="text-font2" style="width: 60mm;">
+								{{p.address}}
+							</div>
+							<div>
+								<div class="text-font2" style="width: 30mm; float:left">
+									{{p.contract}}
+								</div>
+								<div class="text-font2" style="width: 30mm; float:left">
+									{{p.telNo}}
+								</div>
+								<div style="clear:both;height:0;width:0"></div>
+							</div>
+						</div>
+						{% endfor %}
+					</td>
+			  </tr>
+			  <tr style="height: 18mm">
+			    <td class="normal" style="padding-left: 3mm;padding-top: 8mm;">{{page.packingDate}}</td>
+			    <td></td>
+			    <td class="normal" style="padding-left: 3mm;padding-top: 10mm;">{{page.titalP}}</td>
+			    <td class="normal" style="padding-left: 3mm;padding-top: 10mm;">{{page.totalCW}}KGS</td>
+			    <td class="normal" style="padding-left: 3mm;padding-top: 10mm;">{{page.totalM}}CBM</td>
+			    <td class="normal" style="padding-left: 0mm;padding-top: 8mm;" rowspan="2">{{page.remark}}</td>
+			  </tr>
+			  <tr style="height: 15mm">
+			    <td></td>
+			    <td colspan="2"></td>
+			    <td class="normal" style="padding-left: 3mm;padding-top: 10mm;">{{page.tare}}</td>
+			    <td class="normal" style="padding-left: 3mm;padding-top: 10mm;">{{page.totalCCW}}</td>
+			  </tr>
+			</table>
+  	</div>
+		{% endfor %}
+	</body>
+</html>
