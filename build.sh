@@ -2,6 +2,8 @@
 docker build -t fox/py3gunicorn .
 docker run --rm -p 127.0.0.1:3306:3306 --name testsql -v $PWD/mysql/logs:/logs -v $PWD/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -d mysql
 
+sleep 10
+
 docker run --rm -it --link testsql:testsql -v $PWD/sql:/sql  mysql bash -c "mysql -htestsql -uroot -p123456</sql/sequence.sql"
 
 docker run --rm -it --link testsql:testsql -v $PWD/servdata/logs:/logs -v $PWD:/webapp -w /webapp fox/py3gunicorn python CreateTables.py
