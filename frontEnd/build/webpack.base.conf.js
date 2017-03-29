@@ -21,66 +21,59 @@ module.exports = {
       src: path.resolve(__dirname, '../src'),
       commonFunc: path.resolve(__dirname, '../src/assets/js/common.js')
     },
-    extensions: ['', '.js', '.vue', '.less']
-  },
-  resolveLoader: {
-    root: path.join(__dirname, 'node_modules')
+    extensions: ['.js', '.vue', '.less']
   },
   module: {
     loaders: [
       {
         test: /\.vue$/,
-        loader: 'vue'
+        loader: 'vue-loader'
       },
       {
         test: /\.js$/,
         exclude: /node_modules|vue\/dist|vue-router\/|vue-loader\/|vue-hot-reload-api\//,
-        loader: 'babel',
-        query: {compact: false}
+        loader: 'babel-loader',
+        options: {compact: false}
       },
       {
         test: /\.json$/,
-        loader: 'json'
+        loader: 'json-loader'
       },
       {
         test: /\.less$/,
-        loader: 'css!less'
+        use: [
+          'css-loader',
+          'less-loader'
+        ]
       },
       {
         test: /\.scss$/,
-        loader: "style!css!sass"
+        use: [
+          'style-loader',
+          'css-loader',
+          'sass-loader'
+        ]
       },
       {
         test: /\.css$/,
-        loader: 'css'
-
+        loader: 'css-loader'
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
-        loader: 'url',
-        query: {
+        loader: 'url-loader',
+        options: {
           limit: 10000,
           name: '[name].[ext]?[hash]'
         }
       },
       {
-        test: /\.(eot|woff|ttf|svg)\??.*$/,
-        loader: 'url-loader?limit=30000&name=[name]-[hash].[ext]'
-      },
-      {
         test: /\.styl$/,
-        loader: 'style-loader!css-loader!stylus-loader'
+        use: [
+          'style-loader',
+          'css-loader',
+          'stylus-loader'
+        ]
       }
     ]
-  },
-  vue: {
-    loaders: {
-      js: 'babel!eslint',
-      less: 'vue-style!css!less',
-      sass: 'vue-style!css!sass'
-    }
-  },
-  eslint: {
-    formatter: require('eslint-friendly-formatter')
   }
 }

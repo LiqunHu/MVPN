@@ -18,22 +18,6 @@ config.entry.app = [
   config.entry.app
 ]
 
-// generate loader string to be used with extract text plugin
-function generateExtractLoaders (loaders) {
-  return loaders.map(function (loader) {
-    return loader + '-loader' + (SOURCE_MAP ? '?sourceMap' : '')
-  }).join('!')
-}
-
-config.vue.loaders = {
-  js: 'babel!eslint',
-  // http://vuejs.github.io/vue-loader/configurations/extract-css.html
-  css: ExtractTextPlugin.extract('vue-style-loader', generateExtractLoaders(['css'])),
-  less: ExtractTextPlugin.extract('vue-style-loader', generateExtractLoaders(['css', 'less'])),
-  sass: ExtractTextPlugin.extract('vue-style-loader', generateExtractLoaders(['css', 'sass'])),
-  stylus: ExtractTextPlugin.extract('vue-style-loader', generateExtractLoaders(['css', 'stylus']))
-}
-
 config.output.publicPath = '/'
 
 config.plugins = (config.plugins || []).concat([
@@ -42,14 +26,13 @@ config.plugins = (config.plugins || []).concat([
 //    jQuery: 'jquery',
 //    'window.jQuery': 'jquery'
 //  }),
-  new webpack.optimize.OccurenceOrderPlugin(),
   new webpack.HotModuleReplacementPlugin(),
-  new webpack.NoErrorsPlugin(),
+  new webpack.NoEmitOnErrorsPlugin(),
   new ExtractTextPlugin('[name].css'),
   new HtmlWebpackPlugin({
     filename: 'index.html',
     template: 'src/index.ejs',
-    title: 'Putbox',
+    title: 'Test',
     minify: {
       removeComments: false,
       collapseWhitespace: false

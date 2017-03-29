@@ -14,22 +14,6 @@ var SOURCE_MAP = false
 
 config.devtool = SOURCE_MAP ? 'source-map' : false
 
-// generate loader string to be used with extract text plugin
-function generateExtractLoaders (loaders) {
-  return loaders.map(function (loader) {
-    return loader + '-loader' + (SOURCE_MAP ? '?sourceMap' : '')
-  }).join('!')
-}
-
-config.vue.loaders = {
-  js: 'babel!eslint',
-  // http://vuejs.github.io/vue-loader/configurations/extract-css.html
-  css: ExtractTextPlugin.extract('vue-style-loader', generateExtractLoaders(['css'])),
-  less: ExtractTextPlugin.extract('vue-style-loader', generateExtractLoaders(['css', 'less'])),
-  sass: ExtractTextPlugin.extract('vue-style-loader', generateExtractLoaders(['css', 'sass'])),
-  stylus: ExtractTextPlugin.extract('vue-style-loader', generateExtractLoaders(['css', 'stylus']))
-}
-
 config.plugins = (config.plugins || []).concat([
 //  new webpack.ProvidePlugin({
 //    $: 'jquery',
@@ -46,7 +30,6 @@ config.plugins = (config.plugins || []).concat([
       warnings: false
     }
   }),
-  new webpack.optimize.OccurenceOrderPlugin(),
   // extract css into its own file
   new ExtractTextPlugin('[name].[contenthash].css'),
   // generate dist index.html with correct asset hash for caching.
