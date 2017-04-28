@@ -5,28 +5,54 @@ Created on Wed May 18 10:18:23 2016
 @author: huliqun
 """
 from sqlalchemy import Column, Integer, SmallInteger, String, Date, Time,\
-    Text, DateTime, func,BigInteger,Float
+    Text, DateTime, func, BigInteger, Float
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm.interfaces import MapperExtension
 from workserver.util import GLBConfig
 
 Base = declarative_base()
 
+
+class BaseExtension(MapperExtension):
+    def before_update(self, mapper, connection, instance):
+        """ set the updated_at  """
+        instance.version += 1
+
+
+class Domain(Base):
+    __tablename__ = 'tbl_domain'
+    __mapper_args__ = {'extension': BaseExtension()}
+    uid = Column('id', BigInteger, primary_key=True, autoincrement=True)
+    domain = Column(String(100), unique=True, nullable=False)
+    description = Column(String(200))
+    state = Column(String(5), default=GLBConfig.ENABLE, nullable=False)
+    version = Column(BigInteger, default=0, nullable=False)
+    created_at = Column(DateTime(), default=func.now(), nullable=False)
+    updated_at = Column(DateTime(), default=func.now(), nullable=False)
+
+
 class User(Base):
     __tablename__ = 'tbl_user'
-    userID = Column(String(50), primary_key=True, unique=True, nullable=False)
-    accountType = Column(String(2), nullable=False) #00-管理员
-    userName = Column(String(32), unique=True, nullable=False)
-    mobile = Column(String(250))
-    email = Column(String(250))
-    _password = Column('password', String(64), default='', nullable=False)
-    pResetFlag = Column(String(2), default='0', nullable=False)
-    pChangeDate = Column(DateTime(), default=func.now(), nullable=False)
-    pErrorTimes = Column(Integer, default=0, nullable=False)
-    headImg = Column(String(250))
-    makeTime = Column(DateTime(), default=func.now(), nullable=False)
-    modifyTime = Column(DateTime(), default=func.now(), nullable=False)
-    # status: 1 enable, 0 disabled
-    dataStatus = Column(String(5), default=GLBConfig.ENABLE, nullable=False)
+    __mapper_args__ = {'extension': BaseExtension()}
+    uid = Column('id', BigInteger, primary_key=True, autoincrement=True)
+    domain_id = Column(BigInteger, nullable=False)
+    usergroup_id = Column(BigInteger, nullable=False)
+    username = Column(String(100), nullable=False)
+    email = Column(String(100), nullable=False)
+    phone = Column(String(20), nullable=False)
+    _password = Column('password', String(100), default='', nullable=False)
+    name = Column(String(20))
+    gender = Column(String(1))
+    avatar = Column(String(200))
+    address = Column(String(100))
+    country = Column(String(20))
+    city = Column(String(40))
+    zipcode = Column(String(32))
+    _type = Column('type', String(3), nullable=False)  # 00-管理员
+    state = Column(String(5), default=GLBConfig.ENABLE, nullable=False)
+    version = Column(BigInteger, default=0, nullable=False)
+    created_at = Column(DateTime(), default=func.now(), nullable=False)
+    updated_at = Column(DateTime(), default=func.now(), nullable=False)
 
     @property
     def password(self):
@@ -38,66 +64,42 @@ class User(Base):
         # encrypt the password with md5
         self._password = hashlib.md5(password.encode('utf-8')).hexdigest()
 
-class UserFileInfo(Base):
-    __tablename__ = 'tbl_userfileinfo'
-    fileID = Column(BigInteger, primary_key=True,autoincrement=True)
-    userID = Column(String(50))
-    path = Column(String(300))
-    apiName = Column(String(30), nullable=False)
-    relaID = Column(String(80))
-    fileType = Column(String(30))
-    makeTime = Column(DateTime(), default=func.now())
-    modifyTime = Column(DateTime(), default=func.now())
 
-class OperatorInfo(Base):
-    __tablename__ = 'tbl_operatorinfo'
-    userID = Column(String(50), primary_key=True, nullable=False)
-    userGroupID =  Column(Integer)
-    name = Column(String(32))
-    mobile = Column(String(250))
-    email = Column(String(250))
-    gender = Column(String(2), default='U')
-    IDType = Column(String(2), default='00')
-    IDNo = Column(String(30))
-    birthday = Column(DateTime)
-    helpMark = Column(String(32))
-    contact = Column(String(100))
-    address = Column(String(200))
-    makeTime = Column(DateTime(), default=func.now(), nullable=False)
-    modifyTime = Column(DateTime(), default=func.now(), nullable=False)
-    dataStatus = Column(String(5), default=GLBConfig.ENABLE, nullable=False)
+class UserGroup(Base):
+    __tablename__ = 'tbl_usergroup'
+    __mapper_args__ = {'extension': BaseExtension()}
+    uid = Column('id', BigInteger, primary_key=True, autoincrement=True)
+    domain_id = Column(BigInteger, nullable=False)
+    name = Column(String(50))
+    _type = Column('type', String(3), nullable=False)
+    state = Column(String(5), default=GLBConfig.ENABLE, nullable=False)
+    version = Column(BigInteger, default=0, nullable=False)
+    created_at = Column(DateTime(), default=func.now(), nullable=False)
+    updated_at = Column(DateTime(), default=func.now(), nullable=False)
 
-class UserGroupInfo(Base):
-    __tablename__ = 'tbl_usergroupinfo'
-    userGroupID = Column(Integer, primary_key=True,autoincrement=True)
-    userGroupType = Column(String(10), nullable=False)
-    userGroupName = Column(String(250), nullable=False)
-    userGroupStatus =  Column(String(10), default='1', nullable=False)
 
-class MenuInfo(Base):
-    __tablename__ = 'tbl_menuinfo'
-    menuID = Column(Integer, primary_key=True,autoincrement=True)
-    menuType = Column(String(2), nullable=False) #00-目录 01菜单
-    fMenuID  = Column(Integer, nullable=False)
-    menuName = Column(String(250), default='', nullable=False)
-    menuPath = Column(String(250), default='', nullable=True)
-    menuIcon = Column(String(250), default='', nullable=True)
-    menuIdx = Column(Integer, default=99, nullable=False)
+class Menu(Base):
+    __tablename__ = 'tbl_menu'
+    __mapper_args__ = {'extension': BaseExtension()}
+    uid = Column('id', BigInteger, primary_key=True, autoincrement=True)
+    _type = Column('type', String(3), nullable=False)
+    f_menu_id = Column(BigInteger, nullable=False)
+    auth_flag = Column(String(2), default=GLBConfig.AUTH, nullable=False)
+    menu_name = Column(String(100), nullable=False)
+    menu_path = Column(String(100))
+    menu_icon = Column(String(100))
+    menu_index = Column(Integer, default=99, nullable=False)
+
 
 class UserGroupMenu(Base):
     __tablename__ = 'tbl_usergroupmenu'
-    userGroupID = Column(Integer, primary_key=True, nullable=False)
-    menuID = Column(Integer, primary_key=True, nullable=False)
-    menuType = Column(String(2), nullable=False) #00-目录 01菜单
-    fMenuID  = Column(Integer, nullable=False)
-    menuName = Column(String(250), default='', nullable=False)
-    menuPath = Column(String(250), default='', nullable=True)
-    menuIcon = Column(String(250), default='', nullable=True)
-    menuIdx = Column(Integer, default=99, nullable=False)
-
-class UserLog(Base):
-    __tablename__ = 'tbl_userlog'
-    uid = Column(String(50), primary_key=True, nullable=False)
-    userID = Column(String(50))
-    API = Column(String(100))
-    paras = Column(Text)
+    __mapper_args__ = {'extension': BaseExtension()}
+    uid = Column('id', BigInteger, primary_key=True, autoincrement=True)
+    usergroup_id = Column(BigInteger, nullable=False)
+    menu_id = Column(BigInteger, nullable=False)
+    _type = Column('type', String(3), nullable=False)
+    f_menu_id = Column(BigInteger, nullable=False)
+    menu_name = Column(String(100), nullable=False)
+    menu_path = Column(String(100))
+    menu_icon = Column(String(100))
+    menu_index = Column(Integer, default=99, nullable=False)

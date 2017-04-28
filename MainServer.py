@@ -50,7 +50,7 @@ app.add_route('/api/system/userSettingControl', userSettingSRV.UserSettingResour
 # auto-restart workers when it detects a code change, and it also works
 # with pdb.
 if __name__ == '__main__':
-    httpd = simple_server.make_server('0.0.0.0', 9000, app)
+    httpd = simple_server.make_server('0.0.0.0', 9090, app)
     httpd.serve_forever()
 
 #gunicorn -b 127.0.0.1:9000 MainServer:app

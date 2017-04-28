@@ -11,7 +11,7 @@ import time
 from workserver.util import GLBConfig
 from workserver.util import SysUtil
 from workserver.util.AES_PKCS7_extension import Cryptor
-from workserver.module.models import User, OperatorInfo, UserGroupMenu, UserGroupInfo
+from workserver.module.models import User, UserGroupMenu, UserGroupInfo
 import workserver.settings as settings
 ALLOWED_IMAGE_TYPES = (
     'image/jpg',                   
@@ -78,7 +78,7 @@ def userAuthCheck(session, req, user, logging):
         return False
     else:
         exInfo = None
-        if user.accountType == GLBConfig.ATYPE_OPERATOR:
+        if user.accountType == GLBConfig.TYPE_OPERATOR:
             exInfo = session.query(OperatorInfo).filter_by(userID=user.userID).first()
 
         if exInfo is not None:

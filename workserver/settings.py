@@ -15,12 +15,12 @@ TOKEN_AGE = 86400
 DOMAIN = ''
 
 
-log_file = '/logs/serverlog'
-files_storage_path = '/webfiles/static/images'
-temp_path = '/webfiles/temp'
-#log_file = '/Users/huliqun/Work/VFND/servdata/logs/serverlog'
-#files_storage_path = '/Users/huliqun/Work/VFND/static/static/files'
-#temp_path = '/Users/huliqun/Work/VFND/static/temp'
+#log_file = '/logs/serverlog'
+#files_storage_path = '/webfiles/static/images'
+#temp_path = '/webfiles/temp'
+log_file = '/Users/huliqun/Work/MVPN/servdata/logs/serverlog'
+files_storage_path = '/Users/huliqun/Work/MVPN/static/static/files'
+temp_path = '/Users/huliqun/Work/MVPN/static/temp'
 
 
 

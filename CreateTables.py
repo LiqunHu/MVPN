@@ -10,7 +10,7 @@ from sqlalchemy.engine import reflection
 
 from workserver.util import SysUtil
 from workserver.util import GLBConfig
-from workserver.module.models import User, UserFileInfo, OperatorInfo, UserLog, UserGroupInfo,MenuInfo,\
+from workserver.module.models import User, UserFileInfo,  UserLog, UserGroup, MenuInfo,\
 UserGroupMenu
 
 # 为了解决mysql gone away尝试使用NullPool和设置POOL_RECYCLE为5s
@@ -24,13 +24,13 @@ def InitTables(engine):
     #Base.metadata.create_all(engine)
     db = scoped_session(sessionmaker(bind=engine))
     tables = reflection.Inspector.from_engine(engine).get_table_names()
-    
+
     # determine if it needs to re-create the table.
-        
-    
+
+
     if 'tbl_user' not in tables:
         User.__table__.create(engine)
-        
+
         user = User(userID = SysUtil.genUserID(),
                 userName = 'admin',
                 accountType = GLBConfig.ATYPE_ADMINISTRATOR,
@@ -38,11 +38,11 @@ def InitTables(engine):
                     email = 'test@example.com')
         db.add(user)
         db.commit()
-    
+
     tables = reflection.Inspector.from_engine(engine).get_table_names()
     if 'tbl_userfileinfo' not in tables:
         UserFileInfo.__table__.create(engine)
-        
+
     tables = reflection.Inspector.from_engine(engine).get_table_names()
     if 'tbl_usergroupinfo' not in tables:
         UserGroupInfo.__table__.create(engine)
@@ -50,20 +50,20 @@ def InitTables(engine):
                                   userGroupName = 'Administrator')
         db.add(userGroupInfo)
         db.commit()
-        
-        
+
+
     tables = reflection.Inspector.from_engine(engine).get_table_names()
     if 'tbl_operatorinfo' not in tables:
         OperatorInfo.__table__.create(engine)
-    
+
     tables = reflection.Inspector.from_engine(engine).get_table_names()
     if 'tbl_userlog' not in tables:
         UserLog.__table__.create(engine)
-        
+
     tables = reflection.Inspector.from_engine(engine).get_table_names()
     if 'tbl_menuinfo' not in tables:
         MenuInfo.__table__.create(engine)
-        
+
         db.add_all([
         MenuInfo(menuID = 1, menuType = '00', fMenuID = 0, menuName = '系统管理', menuPath = '', menuIcon = 'fa-cogs', menuIdx = 99),
 
@@ -73,7 +73,7 @@ def InitTables(engine):
         MenuInfo(menuType = '01', fMenuID = 1, menuName = '操作员维护', menuPath = '/system/operatorControl', menuIcon = '', menuIdx = 4),
         ])
         db.commit()
-        
+
     tables = reflection.Inspector.from_engine(engine).get_table_names()
     if 'tbl_usergroupmenu' not in tables:
         UserGroupMenu.__table__.create(engine)
@@ -94,7 +94,7 @@ def InitTables(engine):
         userGroupMenu = UserGroupMenu(userGroupID = userGroupInfo.userGroupID,menuID = menu.menuID,menuType = menu.menuType,fMenuID  = menu.fMenuID,menuName = menu.menuName,menuPath = menu.menuPath, menuIcon = menu.menuIcon,menuIdx = menu.menuIdx)
         db.add(userGroupMenu)
         db.commit()
-    
+
 if __name__ == '__main__':
     SysUtil.global_init()
     engine = SysUtil.get_engine_handle()
